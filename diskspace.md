@@ -1,237 +1,63 @@
-# How to Find and List Files Larger Than a Specific Size in Linux
+Here is how you can list all files larger than 100MB on Linux:
 
-## Introduction
+## Using the `find` command
 
-This tutorial will explore a list of helpful disk space usage command lines in Linux, with examples of use for each command line.
+The `find` command is the most versatile way to search for files based on their size. Here's the command:
 
-### How to Find and List Files Larger Than 100MB in Linux
-
-If you wish to find all files over 100M and to see where they are located and what is their size:
-
-```bash
-find . -type f -size +100M -exec ls -lh {} \;
+```
+find / -type f -size +100M -exec ls -lh {} \;
 ```
 
-### How to Find and List Files Larger Than 1GB in Linux
+Let's break down the command:
 
-For example, to find files that are bigger than 1GB, use the following command:
+- `find /` - Starts the search from the root directory `/`. You can replace this with a specific directory if you only want to search a certain location.
+- `-type f` - Specifies that we only want to search for regular files, not directories.
+- `-size +100M` - Looks for files larger than 100MB. The `+` sign means "greater than".
+- `-exec ls -lh {} \;` - Executes the `ls -lh` command on each file found, displaying the file size in a human-readable format.
 
-```bash
-find . -type f -size +1G -exec ls -lh {} \;
+This will list all files larger than 100MB along with their sizes and locations.
+
+## Using the `du` command
+
+Another way to find large files is to use the `du` (disk usage) command. Here's an example:
+
+```
+du -h --max-depth=1 | sort -hr | head -n 10
 ```
 
-### How to Find and List Files Smaller Than 100MB in Linux
+This command:
 
-If you wish to find all files under 100M and to see where they are located and what is their size:
+- `du -h` - Displays the file/directory sizes in human-readable format (e.g. 100M instead of 104857600).
+- `--max-depth=1` - Limits the search to the current directory, not subdirectories.
+- `sort -hr` - Sorts the results in descending order by file size.
+- `head -n 10` - Displays the top 10 largest files/directories.
 
-```bash
-find . -type f -size -100M -exec ls -lh {} \;
+This will show you the 10 largest files/directories in the current directory, which can help you identify the biggest space hogs.
+
+## Combining `find` and `du`
+
+You can also combine the `find` and `du` commands to get more detailed information about large files:
+
+```
+find / -type f -size +100M -exec du -h {} \; | sort -hr
 ```
 
-### How to Find and List Files Between a Certain Size in Linux
+This command:
 
-You might wonder how to find and list files between a certain size. For instance, you can find files between 100MB and 500MB using the following command:
+- `find / -type f -size +100M` - Finds all files larger than 100MB.
+- `-exec du -h {} \;` - Runs the `du` command to get the size of each file found.
+- `sort -hr` - Sorts the results in descending order by file size.
 
-```bash
-find . -type f -size +100M -size -500M -exec ls -l {} \;
-```
+This will give you a sorted list of all files larger than 100MB along with their sizes.
 
-### How to Find Files Larger Than 10MB, 100MB, or 1GB in Linux
-
-To find files larger than 10MB, 100MB, or 1GB, you can use the following commands:
-
-```bash
-find / -type f -size +10M
-find / -type f -size +100M
-find / -type f -size +1G
-```
-
-### How to Find Files by Size and Extension
-
-Instead of searching all files, you can also search files of specific extensions greater than 1GB size. For example, search all files with extension “.log” and size are 1GB or more:
-
-```bash
-find / -type f -name "*.log" -size +1G
-```
-
-### How to Find Files Larger Than a Specific File Size
-
-Use the `find` command with its `-size` flag to find files larger than a specific file size.
-
-```bash
-find . -type f -size +100M
-```
-
-### How to List Files Larger Than a Specific Size
-
-Use the `find` command with its `-size` flag to list files larger than a specific size.
-
-```bash
-find . -type f -size +100M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension
-
-Use the `find` command with its `-size` and `-name` flags to find files larger than a specific size and extension.
-
-```bash
-find / -type f -name "*.log" -size +1G
-```
-
-### How to Find Files Larger Than a Specific Size and Directory
-
-Use the `find` command with its `-size` and `-path` flags to find files larger than a specific size and directory.
-
-```bash
-find /path/to/directory -type f -size +100M
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory
-
-Use the `find` command with its `-size`, `-name`, and `-path` flags to find files larger than a specific size and extension in a specific directory.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories
-
-Use the `find` command with its `-size`, `-name`, and `-path` flags to find files larger than a specific size and extension in a specific directory and subdirectories.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively
-
-Use the `find` command with its `-size`, `-name`, and `-path` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, and `-maxdepth` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, and Extension Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, and `-name` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, and extension limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, Extension Limit, and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, `-name`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, extension limit, and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -size +100M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, Extension Limit, Size Limit, and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, `-name`, `-size`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, extension limit, size limit, and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -size +100M -size -500M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, Extension Limit, Size Limit, Size Limit, and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, `-name`, `-size`, `-size`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, extension limit, size limit, size limit, and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -size +100M -size -500M -size -500M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, Extension Limit, Size Limit, Size Limit, Size Limit, and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, `-name`, `-size`, `-size`, `-size`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, extension limit, size limit, size limit, size limit, and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -size +100M -size -500M -size -500M -size -500M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, Extension Limit, Size Limit, Size Limit, Size Limit, Size Limit, and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, `-name`, `-size`, `-size`, `-size`, `-size`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, extension limit, size limit, size limit, size limit, size limit, and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -size +100M -size -500M -size -500M -size -500M -size -500M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, Extension Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, `-name`, `-size`, `-size`, `-size`, `-size`, `-size`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, extension limit, size limit, size limit, size limit, size limit, size limit, and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -size +100M -size -500M -size -500M -size -500M -size -500M -size -500M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, Extension Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, `-name`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, extension limit, size limit, size limit, size limit, size limit, size limit, size limit, and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -size +100M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, Extension Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, `-name`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, extension limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -size +100M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, Extension Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, `-name`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, extension limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -size +100M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, Extension Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, `-name`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, extension limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -size +100M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, Extension Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, `-name`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, extension limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -size +100M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -size -500M -exec ls -lh {} \;
-```
-
-### How to Find Files Larger Than a Specific Size and Extension in a Specific Directory and Subdirectories Recursively with Depth Limit, Size Limit, Extension Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, Size Limit, and Size Limit
-
-Use the `find` command with its `-size`, `-name`, `-path`, `-maxdepth`, `-size`, `-name`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, `-size`, and `-size` flags to find files larger than a specific size and extension in a specific directory and subdirectories recursively with a depth limit, size limit, extension limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, size limit, and size limit.
-
-```bash
-find /path/to/directory -type f -name "*.log" -size +1G -maxdepth 3 -size -500M -name "*.log" -size +
+Remember to adjust the file size threshold (100M in the examples) based on your specific needs. You can use other size units like `k` for kilobytes, `G` for gigabytes, etc.
 
 Citations:
-[1] https://chemicloud.com/kb/article/find-and-list-files-bigger-or-smaller-than-in-linux/
-[2] https://tecadmin.net/find-all-files-larger-than-1gb-size-in-linux/
-[3] https://manage.accuwebhosting.com/knowledgebase/3647/How-to-Find-All-Files-Larger-than-1GB-in-Linux.html
+[1] https://unix.stackexchange.com/questions/733884/find-folders-who-have-at-least-two-files-over-100-mb
+[2] https://chemicloud.com/kb/article/find-and-list-files-bigger-or-smaller-than-in-linux/
+[3] https://askubuntu.com/questions/1193386/how-to-find-or-list-file-and-directories-which-having-size-more-than-100mb
 [4] https://superuser.com/questions/233616/list-files-bigger-than-filesize-specified
-[5] https://askubuntu.com/questions/1193386/how-to-find-or-list-file-and-directories-which-having-size-more-than-100mb
+[5] https://tecadmin.net/find-all-files-larger-than-1gb-size-in-linux/
+[6] https://www.tomshardware.com/how-to/find-large-files-linux
+[7] https://stackoverflow.com/questions/35447027/linux-command-how-to-find-files-by-size-larger-than-x
+[8] https://manage.accuwebhosting.com/knowledgebase/3647/How-to-Find-All-Files-Larger-than-1GB-in-Linux.html
